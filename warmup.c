@@ -40,10 +40,11 @@ void reportProcessors(char *path){
         token=strtok(NULL,delim2); //gets next token ":"
         token=strtok(NULL,delim2);// gets target token
 
-           // printf("%s\n",token);
 
         value=strtod(token,&endcharVal);
-        if(errno==0){
+                   
+
+        if (*endcharVal == '\0') {
 
             processor=value;
             
@@ -61,7 +62,7 @@ void reportProcessors(char *path){
 
        // printf("token is then: %s\n\n",token);
         value=strtod(token,&endcharVal);
-        if(errno==0){
+        if (*endcharVal == '\0') {
             cache_size=value;
             token=strtok(NULL,delim2);
             //token=strtok(NULL,delim2);
@@ -83,13 +84,119 @@ void reportProcessors(char *path){
     fclose(fp);
 
 
+}void report_meminfo(char *path){
+
+
+ FILE *fp;
+
+    if ((fp=fopen(path,"r"))==NULL){
+        perror(path);
+        exit(1);
+
+
+    }
+    int freeMemory=0;
+    int buffers=0;
+    char *delim= ":"; //delim 1 
+    char *delim2=" "; // delim to extract value 
+    char *endcharVal;
+    double value=0;
+
+    char lineBuffer[MAX_PATH];
+    errno=0;
+ while(fgets(lineBuffer,sizeof(lineBuffer),fp) !=NULL){
+     printf("%s\n",lineBuffer);
+     char *token=strtok(lineBuffer,delim);
+    //printf("%s\n,",token);
+    errno=0;
+
+    if((token != NULL && strcmp(token, "MemFree") == 0)){ //get processor number
+        //token=strtok(NULL,delim2);
+        while((token)!=NULL){
+    
+
+
+          value=strtod(token,&endcharVal);
+          //printf("value is:% lf\n\n",value); 
+
+          if (*endcharVal == '\0') {
+            //printf("errno is:%d\n\n",errno);
+
+            //printf("token is:%s and value is:%lf\n\n\n",token,value);
+            freeMemory=value;
+            char *capacity= strtok(NULL,delim2);
+            printf("Free memory %d %s\n",freeMemory,capacity);
+
+          } 
+
+          else{
+            value=0;
+            errno=0;
+          }
+
+          token=strtok(NULL,delim2);
+        }
+
+           // printf("%s\n",token);
+
+    
+
+    }
+
+
+    if((token != NULL && strcmp(token, "Buffers") == 0)){ //get processor number
+        //printf("%s\n\n",lineBuffer);
+        //printf("%sqwww\n\n",lineBuffer);
+       //token= strtok(NULL,delim2);
+
+        while((token)!=NULL){
+    
+
+
+          value=strtod(token,&endcharVal); 
+
+          if (*endcharVal == '\0') {
+            buffers=value;
+            char *capacity= strtok(NULL,delim2);
+            //printf("capacityAMIMMMM: %s\n",capacity);
+
+            printf("Buffers: %d %s\n",buffers,capacity);
+          } 
+
+          else{
+            value=0;
+            errno=0;
+          }
+
+          token=strtok(NULL,delim2);
+        }
+
+           // printf("%s\n",token);
+
+    
+
+    }
+
+    memset(lineBuffer,0,sizeof(lineBuffer));
+
+    }
+
+    fclose(fp);
+
+
+
+
+
+
+
 }
 
 
 int main(){
     
-    
-    reportProcessors("/proc/cpuinfo");
+    report_meminfo("/proc/meminfo");
+
+    //eportProcessors("/proc/cpuinfo");
     
     
     
