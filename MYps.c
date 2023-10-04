@@ -8,7 +8,7 @@
 #include <limits.h> 
 #include <unistd.h>
 #include <fcntl.h>
-#define FULL_PATH 256
+#define FULL_PATH 1048
 typedef struct{
 int p;
 int s;
@@ -42,7 +42,69 @@ void DisplayOptions(options Myoptions){
 
 int set_Proc_Metadata(ProcessMetadata *Proc){};
 
+uid_t uidcmp(char *path){
 
+FILE *inp;
+
+if((inp=fopen(path,"r"))==NULL){
+    perror(path);
+    exit(1);
+}
+
+char lineBuffer[FULL_PATH];
+int value=0;
+uid_t Real_Uid=-1;
+char *delim1=":";
+char *delim2="\t";
+char *endcharVal;
+
+while(fgets(lineBuffer,sizeof(lineBuffer),inp)!=NULL){
+      //  printf("%s\n\n",lineBuffer);
+
+    char *token=strtok(lineBuffer,delim1);
+    //printf("%s\n\n",lineBuffer);
+
+    if(strcmp(token,"Uid")==0){
+        printf("%s\n","YESSS!");
+       
+        token=strtok(NULL,delim2);
+        printf("token is:%s\n",token);
+        
+        value= strtod(token,&endcharVal);
+        if(*endcharVal=='\0'){
+            Real_Uid=value;
+
+        }
+
+
+
+
+
+}
+memset(lineBuffer,0,sizeof(lineBuffer));
+
+}
+
+return (int)Real_Uid;
+
+
+
+}
+
+
+int procUIDcmp(char *path){
+uid_t Uid=getuid();
+int procUid=uidcmp(path);
+if((int)Uid==procUid){
+
+    return 1;
+}
+else{
+    return 0;
+}
+
+
+}
 
 
 
@@ -115,6 +177,39 @@ while(token!=NULL ){
     printf("%s","field not present");
     fclose(stream);
     return NULL;
+
+}
+
+
+
+
+void listProcDirectory(){
+
+DIR *stream;
+struct dirent **namelist;
+char *path="/proc";
+
+
+
+int n=scandir(path,&namelist,NULL,alphasort);
+
+if(n==-1){
+    perror("scandir");
+    exit(1);
+}
+
+for (int i=0; i<n;i++){
+    if(strcmp(namelist[i]->d_name,".")!=0 && strcmp(namelist[i]->d_name,"..")!=0 ){
+    printf("%s\n",namelist[i]->d_name);
+    free(namelist[i]);
+    }
+}
+free(namelist);
+
+
+
+
+
 
 }
 
@@ -200,36 +295,13 @@ int main(int argc, char **argv){
 
 
 }
-parseCMD_Line("/proc/1/cmdline");
+//parseCMD_Line("/proc/1391801/cmdline");
+
+//parseStat_Statm("/proc/1391801/stat",3);
+
+//listProcDirectory();
+printf("%d\n",procUIDcmp("/proc/10"));
+
 
 return 0;
 } 
-
-/*
-char * var= parseStat_Statm("/proc/1/stat",2);
-printf(" i got you %s ",var);
-
-return 0;
-} 
-
-if(isDir("/proc/1071374")==1){
-
-    printf("%s\n", "is a Directory");
-}
-
-else{
-
-    printf("Nope");
-}
-
-//DisplayOptions(optionStructure);
-*/
-
-
-
-
-// Open the file using the open function
-
-
-
-
