@@ -33,8 +33,10 @@ if((stream=fopen(path,"r"))==NULL){
 }
 
 fgets(line,sizeof(line),stream);
+char *linecopy=strdup(line);
+memset(linecopy,0,sizeof(line));
 //printf("%s\n",line);
-return line;
+return linecopy;
     
 }
 
@@ -60,8 +62,9 @@ char *token=strtok(line, delim);
 
 while(token!=NULL ){
     if(count==field-1){
-    char *target=token;
+    char *target=strdup(token);
     fclose(stream);
+    memset(line,0,sizeof(line)); //reset so as to not cause rewritting data and thus undefined behavior
    // printf(" found target %s !!!", target);
     return target;
     }
@@ -177,12 +180,12 @@ if(pathNonExistant(procpath)==1){
 
     if(Myoptions->S==1){
 
-        printf("stime:%d ",Process->stime);
+        printf("stime=%d ",Process->stime);
     }
 
      if(Myoptions->v==1){
 
-        printf("virtual Memory:%d ",Process->virtualMem);
+        printf("virtual Memory=%d ",Process->virtualMem);
     }
 
 
@@ -204,6 +207,7 @@ int set_Proc_Metadata(char *Pid, options *optionStructure,  ProcessMetadata *Pro
 if(recursion==1){ // manually set PID
     if(optionStructure->p!=1){
     Proc->pid=atoi(Pid);
+   // printf("DEbug: %d\n",Proc->pid);
 }
 }
 
@@ -212,9 +216,9 @@ if(optionStructure->s==1){
     snprintf(absPath,sizeof(absPath),"%s%d%s","/proc/",Proc->pid,"/stat");
     
    // printf("ANIMMMQQQWeare:%s\n\n\n",absPath);
-    printf("%s\n"," State DEBUG");
+    //printf("%s\n"," State DEBUG");
     Proc->state=parseStat_Statm(absPath,3);
-    printf("State is DEBUG:%s\n",Proc->state);
+   // printf("State is DEBUG:%s\n",Proc->state);
 
 }
 
