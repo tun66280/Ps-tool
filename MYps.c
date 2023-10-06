@@ -15,10 +15,12 @@ struct stat stbuf;
 if(stat(path,&stbuf)!=0){
 
 perror(path);
-
+return 1;
 
 }
-
+else{
+    return 0;
+}
 
 }
 
@@ -250,6 +252,8 @@ if(optionStructure->c!=1){
     Proc->cmdline=parseStat_Statm(absPath,1);
 }
 
+return 1;
+
 }
 
 
@@ -262,7 +266,7 @@ if((inp=fopen(path,"r"))==NULL){
     exit(1);
 }
 
-char lineBuffer[FULL_PATH];
+ char lineBuffer[FULL_PATH];
 int value=0;
 uid_t Real_Uid=-1;
 char *delim1=":";
@@ -276,10 +280,10 @@ while(fgets(lineBuffer,sizeof(lineBuffer),inp)!=NULL){
     //printf("%s\n\n",lineBuffer);
 
     if(strcmp(token,"Uid")==0){
-        printf("%s\n","YESSS!");
+       //printf("%s\n","YESSS!");
        
         token=strtok(NULL,delim2);
-        printf("token is:%s\n",token);
+        //printf("token is:%s\n",token);
         
         value= strtod(token,&endcharVal);
         if(*endcharVal=='\0'){
@@ -349,7 +353,7 @@ else{
 
 
 
-DIR *stream;
+//DIR *stream;
 struct dirent **namelist;
 char *path="/proc";
 
@@ -363,6 +367,7 @@ if(n==-1){
 }
 
 for (int i=0; i<n;i++){
+    //if(procUIDcmp("/proc/namelist[i]->d_name/status"))
     if(strcmp(namelist[i]->d_name,"1")==0 || strcmp(namelist[i]->d_name,"10")==0 ){
     
 //printf("For the others");
@@ -456,6 +461,7 @@ printf("%s\n\n","ANIM IT WORKSSSSS");
 
 dipslayProc("default",   &optionStructure,   &procMetadata,  recursion);
 
+//printf("%d\n",procUIDcmp("/proc/3478347/status"));
 
 
 return 0;
