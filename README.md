@@ -49,9 +49,9 @@ the void DisplayProcInfo(ProcessMetadata *Process, options *Myoptions) function 
 The void dipslayProc(char *Pid, options *optionStructure,  ProcessMetadata *Proc, int recursion) is a high level abstraction function. It "is" the ps tool. it checks if "recursion is off" and sets and displays the information of one process, or if recursion is "turned on" it sets then displays the information of all proccesses by iterating through the proc filesystem, and retrieving the name of each [PID] through the help of the scandir function. Its parameters are the Sum total of the set_Proc_Metadata functions parameters, and the DisplayProcInfo functions parameters[see set_Proc_Metadata and DisplayProc functions descriptions above].This function returns void.
 
 
-# Sectin 2.1.9.8:  uid_t uidcmp function
+# Sectin 2.1.9.8:  uid_t getPidUid function
 
-The uid_t uidcmp(char *path) is used to retrive the "Real_UID" of a particular process.Its parameter is a path. This path will lead to the "status" file of a particular [PID] and the function will extract the "Real_UID" field of the status file, which represents the User ID of a given process. This function returns a uid_t, which is a data type (of unsigned int) used to represent a UID.That is, this function returns the UID of a process. This function is used in the procUIDcmp function.
+The uid_t getPidUid(char *path) is used to retrive the "Real_UID" of a particular process.Its parameter is a path. This path will lead to the "status" file of a particular [PID] and the function will extract the "Real_UID" field of the status file, which represents the User ID of a given process. This function returns a uid_t, which is a data type (of unsigned int) used to represent a UID.That is, this function returns the UID of a process. This function is used in the procUIDcmp function.
 
 
 # # Sectin 2.1.9.9:  int procUIDcmp  function

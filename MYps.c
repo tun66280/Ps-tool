@@ -356,7 +356,7 @@ else{
 
 
 void dipslayProc(char *Pid, options *optionStructure,  ProcessMetadata *Proc, int recursion){ // This is the Ultiamate abstraction. This function is the ps tool in itself.
-                                                                                              // initializes and displays proc information based on specified options. Takes as parameter,
+char  *endChar;                                                                                           // initializes and displays proc information based on specified options. Takes as parameter,
                                                                                               // Pid of a process, a pointer to an options structure, a pointer to a ProcessMetadata structure,
                                                                                               // and an integer. This function returns void.   
 if(recursion==0){
@@ -387,18 +387,29 @@ if(n==-1){
     exit(1);
 }
 
-for (int i=0; i<n;i++){
-    //if(procUIDcmp("/proc/namelist[i]->d_name/status"))
-    if(strcmp(namelist[i]->d_name,"1")==0 || strcmp(namelist[i]->d_name,"10")==0 ){
+for (int i=2; i<n;i++){
+    char printBuffer[FULL_PATH];
+    snprintf(printBuffer,sizeof(printBuffer),"%s%s%s","/proc/",namelist[i]->d_name,"/status");
+   // printf("\n%s\n",printBuffer);
+
+    strtod(namelist[i]->d_name,&endChar);
+        if(*endChar!='\0'){
+            continue;
+        }
+
+    if(procUIDcmp(printBuffer)){
+        //if(strcmp(namelist[i]->d_name,"1")==0 || strcmp(namelist[i]->d_name,"10")==0 ){
     
-//printf("For the others");
+        //printf("For the others");
+        
 
-    set_Proc_Metadata(namelist[i]->d_name,  optionStructure,   Proc,  recursion);
-    DisplayProcInfo( Proc,  optionStructure);
+        set_Proc_Metadata(namelist[i]->d_name,  optionStructure,   Proc,  recursion);
+        DisplayProcInfo( Proc,  optionStructure);
 
-    *Proc=MetadataConstructor();
-    free(namelist[i]);
+        *Proc=MetadataConstructor();
+    
     }
+    free(namelist[i]);
 }
 free(namelist);
 
@@ -492,11 +503,7 @@ int main(int argc, char **argv){
 
 dipslayProc("default",   &optionStructure,   &procMetadata,  recursion);
 
-//printf("%d\n",procUIDcmp("/proc/3478347/status"));
 
-//printf("\ncmd is :%s",procMetadata.cmdline);
-
-//printf("%s", parseCMD_Line("/proc/1/cmdline"));
 return 0;
 } 
 
