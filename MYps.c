@@ -494,7 +494,7 @@ dipslayProc("default",   &optionStructure,   &procMetadata,  recursion);
 
 //printf("%d\n",procUIDcmp("/proc/3478347/status"));
 
-printf("\ncmd is :%s",procMetadata.cmdline);
+//printf("\ncmd is :%s",procMetadata.cmdline);
 
 //printf("%s", parseCMD_Line("/proc/1/cmdline"));
 return 0;
