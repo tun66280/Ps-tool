@@ -1,3 +1,9 @@
+//Anim Ohene
+
+/*The warmup.c file displays the resources consumed by processes. 
+It displays the number of processors and the amount of cache in each CPU, 
+and the free memory and number of memory buffers. */
+
 #include <sys/types.h>
 #include <dirent.h>
 #include <stdlib.h>
@@ -84,7 +90,8 @@ void reportProcessors(char *path){
     fclose(fp);
 
 
-}void report_meminfo(char *path){
+}
+void report_meminfo(char *path){
 
 
  FILE *fp;

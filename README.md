@@ -4,7 +4,7 @@
 
 # Section 1: Comple and Run
 To compile and run the program simply use the make command. If you run make with no arguments then it will create an excecutable file called Main from the object files created. Now, if you wish the run the program you must specify the "Run" target after entering the make command. Due to the nature of our program, you can specify the the command line arguments you wish to enable at the time of execution. To do this, enter in your command line: 
-make Run ARGS= "arg1 arg2 argN"   where arg1 - the Nth argument specifies the options you wish to enable.
+make Run ARGS= "arg1 arg2 argN"   where arg1 - the Nth argument specifies the options you wish to enable. The makefile has 3 targets: all, Main, Run, MYps.o, and clean. make all is the defualt target which will simply compile the MYps program and create an executable called Main. Performing make Run will compile and run the Main program. As stated above, perform: make Run="arg1 arg2 arg3". performing make MYps.o target simply creates the MYps object file. lastly, running make clean, will delete the executable Main, hence the target name, "clean".
 
 
 
@@ -36,17 +36,17 @@ the options defaultConstructor() is used to initialize an options structure. The
 
 # Sectin 2.1.7:  set_Proc_Metadata function
 
-int set_Proc_Metadata(char *Pid, options *optionStructure,  ProcessMetadata *Proc, int recursion) is a function used to intialize a record for a ProcessMetadata structure type. It checks the value of the flags in an options record and intializes the fields of a given ProcessMetadata record accordingly. The first parameter char *Pid is used to specify the PID of a proccess. The second parameter options *optionStructure takes a pointer to an options structure and its role is to check the condition of whether the specfied options records flags have been set in order to properly intialize a Process Metadata record. The third parameter ProcessMetadata *Proc takes a pointer to a ProcessMetadaata Structure and is used to initialize the fields of a a ProcessMetadata record based on whether an options record flag has been set. The fourth parameter int recursion takes an integer. Its function is to act as a flag as to whether or not the -p option has been selected or not. If it hasn't then we will use this flag variable as a condition as to manually initialize the Pid field in a ProcessMetadata record for each process we are displaying(since we arent only displaying one process now). This function is used in the DisplayProc function which is the highest level of abstraction function in the MYps.c file.
+int set_Proc_Metadata(char *Pid, options *optionStructure,  ProcessMetadata *Proc, int recursion) is a function used to intialize a record for a ProcessMetadata structure type. It checks the value of the flags in an options record and intializes the fields of a given ProcessMetadata record accordingly. The first parameter char *Pid is used to specify the PID of a proccess. The second parameter options *optionStructure takes a pointer to an options structure and its role is to check the condition of whether the specfied options records flags have been set in order to properly intialize a Process Metadata record. The third parameter ProcessMetadata *Proc takes a pointer to a ProcessMetadaata Structure and is used to initialize the fields of a a ProcessMetadata record based on whether an options record flag has been set. The fourth parameter int recursion takes an integer. Its function is to act as a flag as to whether or not the -p option has been selected or not. If it hasn't then we will use this flag variable as a condition as to manually initialize the Pid field in a ProcessMetadata record for each process we are displaying(since we arent only displaying one process now). This function is used in the DisplayProc function which is the highest level of abstraction function in the MYps.c file.This function returns an integer.
 
 
 # Sectin 2.1.8:  DisplayProcInfo function
 
-the void DisplayProcInfo(ProcessMetadata *Process, options *Myoptions) function is a function that displays the information about a process based on the specified options. The first parameter ProcessMetadata *Process, takes a pointer to ProcessMetadata structure and the second argumetn takes a pointer to an options structure. Together theres parameters are used to display the information of a ProcessMetadata record based on the values of the flags in an options record.This function is used in the DisplayProc function which is the highest level of abstraction function in the MYps.c file.
+the void DisplayProcInfo(ProcessMetadata *Process, options *Myoptions) function is a function that displays the information about a process based on the specified options. The first parameter ProcessMetadata *Process, takes a pointer to ProcessMetadata structure and the second argumetn takes a pointer to an options structure. Together theres parameters are used to display the information of a ProcessMetadata record based on the values of the flags in an options record.This function is used in the DisplayProc function which is the highest level of abstraction function in the MYps.c file.This function returns void 
 
 # Sectin 2.1.9:  DisplayProc function
 
 
-The void dipslayProc(char *Pid, options *optionStructure,  ProcessMetadata *Proc, int recursion) is a high level abstraction function. It "is" the ps tool. it checks if "recursion is off" and sets and displays the information of one process, or if recursion is "turned on" it sets then displays the information of all proccesses by iterating through the proc filesystem, and retrieving the name of each [PID] through the help of the scandir function. Its parameters are the Sum total of the set_Proc_Metadata functions parameters, and the DisplayProcInfo functions parameters[see set_Proc_Metadata and DisplayProc functions descriptions above].
+The void dipslayProc(char *Pid, options *optionStructure,  ProcessMetadata *Proc, int recursion) is a high level abstraction function. It "is" the ps tool. it checks if "recursion is off" and sets and displays the information of one process, or if recursion is "turned on" it sets then displays the information of all proccesses by iterating through the proc filesystem, and retrieving the name of each [PID] through the help of the scandir function. Its parameters are the Sum total of the set_Proc_Metadata functions parameters, and the DisplayProcInfo functions parameters[see set_Proc_Metadata and DisplayProc functions descriptions above].This function returns void.
 
 
 # Sectin 2.1.9.8:  uid_t uidcmp function
@@ -61,12 +61,21 @@ The int procUIDcmp(char *path) function is used to to compare the real User ID o
 
  # Section 2.2: warmup.c
 
+The warmup.c file displays the resources consumed by processes. It displays the number of processors and the amount of cache in each CPU, and the free memory and number of memory buffers. 
 
 
+#  Section 2.2.1: void reportProcessors function
 
- # Section 2.3: Makefile 
+the void reportProcessors(char *path) function reports the amount of processers and the amount of cache in each CPU. It takes a char * path as a parameter which is a path that leads to the cpuinfo file of proc: "/proc/cpuinfo". Its return value is void as it is only used to "report" (print) the information
 
+
+#  Section 2.2.2: void report_meminfo function
+
+the void report_meminfo(char *path) function reports the free memory in the system, as well as the number of memory buffers. This function takes a char * path as a parameter, which is a path that leads to the meminfo file of proc. So, "/proc/meminfo" This function returns void as it is only reporting information
 
 
 
 # Section 3: Testing 
+
+The secret to me testing this project lay with one powerful unix command. This command is called od, and I specified the -c option. In the beginning, I had a lot of trouble parsing the proc files:cpuinfo, meminfo, stat, statm and etc. This is because my primary strategy was in using the strtok token the parse the desired values. In using strtok, one needs to know the delimeter value to use but sometimes its hard to discern the exact characters being presented in files. However with the help of od -c, I was able to see every single character present in a particular file in a definite manner. That is, if a file contained the word:    present
+using od -c file would present: /t p r e s e n t \n. This command proved to be a great ally in parsing all the files in this project. One useful function that helped in my testing was the perror() function. perror prints a message to the stderr as well as the error code it stores in the errno global variable. Since my code depended heavily on opening the correct files I would often get  "not a file or directory error" from perror() function. This message itself wasnt enough, which is why the true gift of perror is that it takes a char * as parameter. So, the strategty I had was that, for each function which took a char *path as parameter. I would issue a perror() and insert "path" as a parameter, so I could denote which function the error was stemming from, and correct the path passed. In my testing I would issue large amounts of exaggerated printf statements to catch a pesky bug. Ex: printf("ANIIIMMMMMMMM OHENEEEEE");. Although it may seem silly at first, printing exxgerated statements has been a longtime strategy of mine, as it catches my attention and leaves no room for confusion  that I have potentially located an error. Of course, it also allows me to enjoy the coding adventures i'm having as well, haha!  

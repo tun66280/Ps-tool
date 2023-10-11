@@ -4,6 +4,8 @@ OBJS= MYps.o
 
 .PHONY: all clean
 
+#Anim Ohene
+# This makefile updates and recompiles MYps.c, and can run the program
 all: Main
 
 Main: $(OBJS)
@@ -17,7 +19,6 @@ Run: Main
 Myps.o: MYps.c 
 	$(CC) -c MYps.c -o MYps.o $(CFLAGS)
 
-.PHONY: clean
 
 clean: -rm Main $(OBJS)
 
