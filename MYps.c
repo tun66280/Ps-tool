@@ -35,13 +35,13 @@ char *parseCMD_Line(char *path){ // Gets cmd line from proc. Takes a path as par
 static char line[FULL_PATH];     // and returns cmdline of proc/[PID]. Or exits the program of there was
                                  // an error opening the path.   
 FILE *stream;
-if((stream=fopen(path,"r"))==NULL){
+if((stream=fopen(path,"r"))==NULL){// initialize stream
     perror("CMD");
     exit(1);
 }
 
-fgets(line,sizeof(line),stream);
-char *linecopy=strdup(line);
+fgets(line,sizeof(line),stream); //get line
+char *linecopy=strdup(line);    // get copy ofline 
 memset(line,0,sizeof(line));
 //printf("%s\n",line);
 return linecopy;
@@ -56,7 +56,7 @@ char  *parseStat_Statm(char *path,int field){ // parses the stat and statm files
                                               // returns the field value(char *) or NULL if failed.    
  static char line[FULL_PATH];
 FILE *stream;
-if((stream=fopen(path,"r"))==NULL){
+if((stream=fopen(path,"r"))==NULL){ // initialize stream
     perror(path);
     exit(1);
 }
@@ -92,7 +92,7 @@ while(token!=NULL ){
 
 }
 
-typedef struct{
+typedef struct{ //struct for options flag
 int p;
 int s;
 int U;
@@ -103,7 +103,7 @@ int c;
 
 
 
-typedef struct{
+typedef struct{ //struct for a processes metadata
 int pid;
 char *state;
  int utime;
@@ -115,7 +115,7 @@ char *cmdline;
 }ProcessMetadata;
 
 
-ProcessMetadata MetadataConstructor(){
+ProcessMetadata MetadataConstructor(){ //Constructor for ProcessMetadata struct
 ProcessMetadata MetadataConstructor;    
 MetadataConstructor.pid=-1;
 MetadataConstructor.state=NULL;
@@ -137,7 +137,7 @@ return MetadataConstructor;
 }
 
 
-options defaultConstructor(){
+options defaultConstructor(){ // constructor for options struct
 options OptionConstructor;    
 OptionConstructor.p=-1;
 OptionConstructor.s=-1;

@@ -16,11 +16,11 @@ and the free memory and number of memory buffers. */
 #include <fcntl.h>
 #define MAX_PATH 4096
 
-void reportProcessors(char *path){
+void reportProcessors(char *path){ // this functions reports 
 
     FILE *fp;
 
-    if ((fp=fopen(path,"r"))==NULL){
+    if ((fp=fopen(path,"r"))==NULL){ //Initialize stream 
         perror(path);
         exit(1);
 
@@ -31,7 +31,6 @@ void reportProcessors(char *path){
     char *delim= "\t"; //delim 1 
     char *delim2=" "; // delim to extract value 
     char *endcharVal;
-    char *buffer;
     double value=0;
 
 
@@ -42,9 +41,11 @@ void reportProcessors(char *path){
     //printf("%s\n,",token);
     errno=0;
 
-    if((token != NULL && strcmp(token, "processor") == 0)){ //get processor number
+    if((token != NULL && strcmp(token, "processor") == 0)){ //get processor number of processor and cache size
+                                                            // it takes as parameter a path (char *) and returns 
+                                                            //void
         token=strtok(NULL,delim2); //gets next token ":"
-        token=strtok(NULL,delim2);// gets target token
+        token=strtok(NULL,"\n");// gets target token
 
 
         value=strtod(token,&endcharVal);
@@ -70,12 +71,12 @@ void reportProcessors(char *path){
         value=strtod(token,&endcharVal);
         if (*endcharVal == '\0') {
             cache_size=value;
-            token=strtok(NULL,delim2);
+            token=strtok(NULL,"\n");
             //token=strtok(NULL,delim2);
 
 
            // printf("value is: %lf\n\n",cache_size);
-            printf("processor %d with a case size of %lf %s\n\n",processor,cache_size,token);
+            printf("processor %d with a cache size of %lf %s\n\n",processor,cache_size,token);
             
         }
         else{errno=0;}
@@ -83,7 +84,7 @@ void reportProcessors(char *path){
 
     }
 
-    memset(lineBuffer,0,sizeof(lineBuffer));
+    memset(lineBuffer,0,sizeof(lineBuffer)); //reset memory of linebuffer
 
     }
 
@@ -91,8 +92,9 @@ void reportProcessors(char *path){
 
 
 }
-void report_meminfo(char *path){
-
+void report_meminfo(char *path){ // this function reports the free memory and and buffers.
+                                 // it takes as parameter a path (char *)
+                                 // this function returns void
 
  FILE *fp;
 
@@ -112,7 +114,7 @@ void report_meminfo(char *path){
     char lineBuffer[MAX_PATH];
     errno=0;
  while(fgets(lineBuffer,sizeof(lineBuffer),fp) !=NULL){
-     printf("%s\n",lineBuffer);
+     //printf("%s\n",lineBuffer);
      char *token=strtok(lineBuffer,delim);
     //printf("%s\n,",token);
     errno=0;
@@ -203,7 +205,9 @@ int main(){
     
     report_meminfo("/proc/meminfo");
 
-    //eportProcessors("/proc/cpuinfo");
+    printf("%s","\n\n");
+
+    reportProcessors("/proc/cpuinfo");
     
     
     
